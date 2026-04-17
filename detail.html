@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sheet Detail — Reference Operations</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="detail-page">
+      <header class="topbar">
+        <div>
+          <a class="back-link" href="./index.html">Back to Dashboard</a>
+          <p class="eyebrow">Dedicated Sheet View</p>
+          <h1 id="heroTitle">Sheet Detail</h1>
+          <p id="heroDescription" class="muted"></p>
+        </div>
+        <div class="topbar-actions">
+          <button id="editModeToggle" class="primary-btn" type="button">Enable Edit Mode</button>
+          <button id="exportSnapshot" class="secondary-btn" type="button">Export Snapshot</button>
+        </div>
+      </header>
+
+      <section class="detail-layout">
+        <div class="content-column">
+          <article class="panel detail-panel">
+            <div class="detail-header">
+              <div>
+                <p class="eyebrow">Sheet Directory</p>
+                <h2 id="sheetTitle">Choose a sheet</h2>
+              </div>
+              <div class="detail-controls">
+                <label class="field-inline">
+                  <span>Open another sheet</span>
+                  <select id="sheetPicker"></select>
+                </label>
+                <label class="field-inline">
+                  <span>Section</span>
+                  <select id="sectionFilter"></select>
+                </label>
+                <label class="check-inline">
+                  <input id="rawToggle" type="checkbox" />
+                  <span>Show raw rows</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="sheetNotes" class="notes-grid"></div>
+            <div id="sheetBlocks" class="blocks-stack"></div>
+            <div id="rawRowsContainer" class="raw-rows hidden"></div>
+          </article>
+        </div>
+
+        <aside class="right-rail">
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Connections</p>
+                <h3>Related Sheets</h3>
+              </div>
+            </div>
+            <div id="relatedSheets" class="link-stack"></div>
+          </article>
+
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Examples</p>
+                <h3>Sheet Attachments</h3>
+              </div>
+            </div>
+            <label class="upload-panel">
+              <input id="exampleUpload" type="file" multiple accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xlsx,.xls,.json" />
+              <span>Upload screenshots or reference files for this sheet.</span>
+            </label>
+            <div id="uploadList" class="link-stack"></div>
+          </article>
+        </aside>
+      </section>
+
+      <!-- Edit Row Modal -->
+      <div id="editModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-modal="true"></div>
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Edit Reference Row</p>
+              <h3 id="modalTitle">Row Editor</h3>
+            </div>
+            <button id="closeModal" class="secondary-btn" type="button">Close</button>
+          </div>
+          <form id="editForm" class="modal-form"></form>
+          <div class="modal-actions">
+            <button id="clearRowEdits" class="secondary-btn" type="button">Reset Row</button>
+            <button id="saveRowEdits" class="primary-btn" type="button">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assign Upload Modal -->
+      <div id="assignModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-assign-modal="true"></div>
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Assign Uploaded Example</p>
+              <h3 id="assignTitle">Choose target field</h3>
+            </div>
+            <button id="closeAssignModal" class="secondary-btn" type="button">Close</button>
+          </div>
+          <div class="modal-form">
+            <div class="modal-field">
+              <label for="assignTable">Reference table</label>
+              <select id="assignTable"></select>
+            </div>
+            <div class="modal-field">
+              <label for="assignRow">Field row</label>
+              <select id="assignRow"></select>
+            </div>
+            <div class="modal-field">
+              <label for="assignColumn">Target field / column</label>
+              <select id="assignColumn"></select>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="skipAssign" class="secondary-btn" type="button">Skip for now</button>
+            <button id="saveAssignment" class="primary-btn" type="button">Attach Example</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expanded Cell Modal -->
+      <div id="textModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-text-modal="true"></div>
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Expanded Content</p>
+              <h3 id="textModalTitle">Cell detail</h3>
+            </div>
+            <button id="closeTextModal" class="secondary-btn" type="button">Close</button>
+          </div>
+          <div id="textModalBody" class="text-modal-body"></div>
+        </div>
+      </div>
+
+      <!-- Preview Modal -->
+      <div id="previewModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-preview-modal="true"></div>
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Example Preview</p>
+              <h3 id="previewModalTitle">Attachment</h3>
+            </div>
+            <button id="closePreviewModal" class="secondary-btn" type="button">Close</button>
+          </div>
+          <div id="previewModalBody" class="text-modal-body"></div>
+        </div>
+      </div>
+
+      <!-- Note Editor Modal -->
+      <div id="noteModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-note-modal="true"></div>
+        <div class="modal-dialog">
+          <div class="modal-head">
+            <div>
+              <p class="eyebrow">Edit Note</p>
+              <h3 id="noteModalTitle">Note</h3>
+            </div>
+            <button id="closeNoteModal" class="secondary-btn" type="button">Close</button>
+          </div>
+          <div class="modal-form">
+            <div class="modal-field">
+              <label for="noteModalBodyInput">Note content</label>
+              <textarea id="noteModalBodyInput"></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="saveNoteEdits" class="primary-btn" type="button">Save Note</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./detail.js"></script>
+  </body>
+</html>
